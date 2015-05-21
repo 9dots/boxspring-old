@@ -11,12 +11,15 @@ BUILD_ARGS = client.js -g reactify -o build/build.js -v
 
 clean:
 	@rm node_modules/components &> /dev/null || true
+	@rm node_modules/lib &> /dev/null || true
+	@rm -rf build
 
 link: clean
 	@ln -s ${PWD}/components node_modules/components
+	@ln -s ${PWD}/lib node_modules/lib
 
 dir:
-	@mkdir build &> /dev/null || true
+	@mkdir -p build
 
 lr: dir
 	@${NODE_BIN}/tiny-lr-it build

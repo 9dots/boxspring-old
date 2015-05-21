@@ -23,7 +23,7 @@ app.set('port', process.env.PORT || 3000);
 
 app.use('/static', express.static(__dirname + '/build'));
 
-//app.use('/api')
+//app.use('/api', require('./api'));
 
 app.use(require('./views'));
 
