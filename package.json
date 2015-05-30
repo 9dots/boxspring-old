@@ -8,13 +8,15 @@
     "index.js"
   ],
   "dependencies": {
-    "@weo-edu/schema": "^0.1.1",
-    "@weo-edu/validate": "^2.12.1",
+    "@weo-edu/po": "^0.1.3",
+    "@weo-edu/schema": "^0.1.7",
+    "@weo-edu/validate": "^2.12.2",
     "compression": "~1.4.3",
     "debug": "~2.1.3",
     "express": "~4.12.3",
     "express-jwt": "~3.0.0",
     "express-react-views": "~0.7.2",
+    "ramda": "^0.14.0",
     "react": "~0.13.2",
     "reactify": "^1.1.0"
   },
