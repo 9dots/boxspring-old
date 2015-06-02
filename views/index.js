@@ -13,7 +13,7 @@ app.engine('jsx', react.createEngine());
 app.get('*', function(req, res, next) {
 
   if(req.url === '' || /html/.test(req.headers.accept || '')) {
-    res.render('index', {title: 'Boxspring'});
+    return res.render('index', {title: 'Boxspring'});
   }
   
   next();

@@ -18,7 +18,7 @@ exports.update = function(box) {
 };
 
 function computeNames(box) {
-  box.name = slug(box.displayName);
-  box.fullName = box.owner + '/' + box.name;
+  box.name = slug(box.displayName).toLowerCase();
+  box.fullName = box.owner.username + '/' + box.name;
   return box;
 };

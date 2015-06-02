@@ -6,4 +6,3 @@ Schema.use(R.curry(validator)(R.__, {greedy: true}));
 
 
 exports.box = require('./box');
-exports.file = require('./file');

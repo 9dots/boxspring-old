@@ -13,4 +13,4 @@ exports.get = function(req, res, next) {
   }).catch(next);
 };
 
-exports.validateSet = validate(schemas.box.pick('displayName').others(false));
+exports.validateSet = validate(schemas.box.pick('description', 'name').others(false));

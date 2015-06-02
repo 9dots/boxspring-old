@@ -1,6 +1,41 @@
+/**
+ * Modules
+ */
+
+var React = require('react');
+var mui = require('material-ui');
+
+require('whatwg-fetch');
+require("react-tap-event-plugin")();
+
+/**
+ * Components
+ */
+
 var Home = require('./home.jsx');
 var Dashboard = require('./dashboard.jsx');
-var React = require('react');
+
+/**
+ * App Setup
+ */
+
+var ThemeManager = new mui.Styles.ThemeManager();
+ThemeManager.setTheme(ThemeManager.types.LIGHT);
+
+
+/**
+ * App
+ */
+
+exports.childContextTypes = {
+  muiTheme: React.PropTypes.object
+};
+
+exports.getChildContext = function() {
+  return {
+    muiTheme: ThemeManager.getCurrentTheme()
+  };
+};
 
 exports.componentWillMount = function() {
   this.lock = new Auth0Lock('sYkFyv2qKjEMe2W2OugZ5JiHUju296kL', 'boxspring.auth0.com');

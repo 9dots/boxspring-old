@@ -1,10 +1,11 @@
 var Redis = require('ioredis');
+var R = require('ramda');
+
 var redis = Redis();
 
-var format = require('string-template');
+var compile = require('string-template/compile');
 
-var boxesKey = format('/users/{username}/boxes');
-
+var boxesKey = compile('/users/{username}/boxes');
 
 /**
  * Redis commands
@@ -16,11 +17,11 @@ exports.create = function(box) {
 };
 
 exports.get = function(owner, box) {
-  return redis.hget(boxesKey(owner), box);
+  return redis.hget(boxesKey({username: owner}), box).then(JSON.parse);
 };
 
-exports.list = function(username) {
-  return redis.hgetall(boxesKey({username: username}));
+exports.all = function(username) {
+  return redis.hgetall(boxesKey({username: username})).then(R.mapObj(JSON.parse));
 };
 
 exports.del = function(username, box) {

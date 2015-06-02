@@ -8,14 +8,18 @@ var schemas = require('./schemas');
 var app = module.exports = express();
 
 
-
 app.use('/users/me', middleware.auth.user);
 
 /**
- * List boxes for authenticated user
+ * Create new box for authenticated user
  */
 
-app.get('/users/me/boxes', actions.boxes.list);
+app.post('/user/boxes', 
+  middleware.auth.user, 
+  middleware.box.validateSet,
+  actions.boxes.create);
+
+
 
 /**
  * List boxes for `user`
@@ -23,14 +27,7 @@ app.get('/users/me/boxes', actions.boxes.list);
 
 app.get('/users/:username/boxes', actions.boxes.list);
 
-/**
- * Create new box for authenticated user
- */
 
-app.post('/user/boxes', 
-  middleware.auth, 
-  middleware.setBoxV
-  actions.boxes.create);
 
 /**
  * Add auth middleware to /boxes/me
@@ -51,46 +48,7 @@ app.get('/boxes/:owner/:box', actions.boxes.get);
  */
 
 app.post('/boxes/:owner/:box',
-  middleware.box.validateSet 
+  middleware.box.validateSet, 
   actions.boxes.update
 );
-
-/**
- * Add file to box
- */
-
-app.post('/boxes/:owner/:box/files',
-  middleware.file.validateSet, 
-  middleware.box.get,
-  actions.files.create
-);
-
-
-/**
- * Get files in box
- */
-
-app.get('/boxes/:owner/:box/files', actions.files.list);
-
-
-
-/**
- * Update file in box
- */
-
-app.post('/boxes/:owner/:box/files/:file', actions.files.update);
-
-/**
- * Update path in box
- */
-
-app.post('/boxes/:owner/:box/paths/:path', action.files.updatePath);
-
-
-/**
- * Delete file from box
- */
-
-app.del('/boxes/:owner/:box/files/:file', actions.files.del);
-
 

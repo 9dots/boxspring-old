@@ -44,7 +44,6 @@ describe('Box', function() {
     assert.ok(_.find(msg.errors, {field: 'owner'}));
     assert.ok(_.find(msg.errors, {field: 'name'}));
     assert.ok(_.find(msg.errors, {field: 'fullName'}));
-    assert.ok(_.find(msg.errors, {field: 'displayName'}));
     assert.ok(_.find(msg.errors, {field: 'createdAt'}));
     assert.ok(_.find(msg.errors, {field: 'updatedAt'}));
   });
@@ -57,33 +56,6 @@ describe('Box', function() {
   });
 
 });
-
-describe('File', function() {
-  it('should be valid when formed properly', function() {
-    var msg = file.validate(f);
-    assert.ok(msg.valid);
-  });
-
-  it('should ensure all fields are required', function() {
-    var msg = file.validate({});
-    assert.ok(_.find(msg.errors, {field: 'type'}));
-    assert.ok(_.find(msg.errors, {field: 'id'}));
-    assert.ok(_.find(msg.errors, {field: 'box'}));
-    assert.ok(_.find(msg.errors, {field: 'path'}));
-    assert.ok(_.find(msg.errors, {field: 'fullPath'}));
-    assert.ok(_.find(msg.errors, {field: 'contentUrl'}));
-    assert.ok(_.find(msg.errors, {field: 'createdAt'}));
-    assert.ok(_.find(msg.errors, {field: 'updatedAt'}));
-  });
-
-  it('should invalidate other types', function() {
-    var fi = _.clone(f);
-    fi.type = 'box';
-    var msg = file.validate(fi);
-    assert(!msg.valid);
-  });
-});
-
 
 
 var u = {
@@ -100,26 +72,11 @@ var b = {
   },
   name: 'elephant',
   fullName: 'tio/elephant',
-  displayName: 'Elephant',
   description: 'elephant app',
   createdAt: (new Date()).toISOString(),
   updatedAt: (new Date()).toISOString()
 };
 
-var f = {
-  type: 'file',
-  id: '123-45-67-89',
-  box: {
-    id: '123-45-67-89', 
-    fullName: 'tio/elephant', 
-    displayName: 'Elephant'
-  },
-  path: 'index.js',
-  fullPath: 'tio/elephant/index.js',
-  contentUrl: 'http://s3.boxpring.com/tio/elephant/index.js',
-  createdAt: (new Date()).toISOString(),
-  updatedAt: (new Date()).toISOString()
-};
 
 
 

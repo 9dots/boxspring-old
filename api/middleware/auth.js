@@ -8,7 +8,7 @@ var jwtCheck = jwt({
 });
 
 
-exports.user = mw.compose(
+exports.user = compose(
   jwtCheck,
   function(req, res, next) {
     req.user = {id: req.user.user_id, username: req.user.nickname};

@@ -35,10 +35,7 @@ boxes.create = po(
  * @return {Object}
  */
 
-boxes.get = po(
-  db.get,
-  JSON.parse
-);
+boxes.get = db.get;
 
 /**
  * List boxes
@@ -48,8 +45,9 @@ boxes.get = po(
  */
 
 boxes.list = po(
-  db.list,
-  R.mapObj(JSON.parse)
+  db.all,
+  R.values,
+  R.sortBy(R.prop('updatedAt'))
 );
 
 /**
@@ -65,7 +63,7 @@ boxes.update = po(
   function(owner, box, fields) {
     return po(boxes.get, extend(fields))(owner, box);
   },
-  transforms.update
+  transforms.update,
   db.create
 );
 

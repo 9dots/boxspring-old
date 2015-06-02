@@ -24,10 +24,10 @@ dir:
 lr: dir
 	@${NODE_BIN}/tiny-lr-it build
 
-watch: dir link
+watch: link dir
 	@${NODE_BIN}/watchify ${BUILD_ARGS}
 
-build: dir link
+build: link dir
 	@${NODE_BIN}/browserify ${BUILD_ARGS}
 
 start:
