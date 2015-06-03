@@ -5,8 +5,14 @@
 var React = require('react');
 var mui = require('material-ui');
 
-require('whatwg-fetch');
 require("react-tap-event-plugin")();
+
+/**
+ * Pollyfills
+ */
+
+require('whatwg-fetch');
+require('es6-promise').polyfill();
 
 /**
  * Components
@@ -26,6 +32,8 @@ ThemeManager.setTheme(ThemeManager.types.LIGHT);
 /**
  * App
  */
+
+exports.name = 'App';
 
 exports.childContextTypes = {
   muiTheme: React.PropTypes.object

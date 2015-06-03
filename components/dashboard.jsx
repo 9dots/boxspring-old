@@ -4,6 +4,7 @@ var AppBar = mui.AppBar;
 var LinearProgress = mui.LinearProgress;
 var FloatingActionButton = mui.FloatingActionButton;
 var FontIcon = mui.FontIcon;
+var Paper = mui.Paper;
 
 var CreateBoxDialog = require('./createBoxDialog.jsx');
 
@@ -19,24 +20,35 @@ var icon = {
   color: 'white'
 };
 
+var container = {
+  margin: '0 auto',
+  maxWidth: '960px'
+};
 
+exports.name = 'Dashboard';
 
 exports.getInitialState = function() {
   return {
-    profile: null
+    profile: null,
+    boxes: []
   }
 };
 
 exports.componentDidMount = function() {
+  var self = this;
   // In this case, we receive lock and the token from the parent component
   // If you hav them locally, just use `this.lock` and `this.idToken`
-  this.props.lock.getProfile(this.props.idToken, function (err, profile) {
+  self.props.lock.getProfile(this.props.idToken, function (err, profile) {
     if (err) {
       console.log("Error loading the Profile", err);
       return;
     }
-    this.setState({profile: profile});
-  }.bind(this));
+    self.setState({profile: profile});
+    self.getBoxes(profile);
+  });
+
+  
+
 };
 
 exports.render = function() {
@@ -49,11 +61,22 @@ exports.render = function() {
     );
   }
 
+  var boxNodes = this.state.boxes.map(function(box) {
+    return (
+      <Paper key={box.id}>
+        <h3>{box.name}</h3>
+        <p>{box.description}</p>
+      </Paper>
+    )
+  });
 
 
   return (
     <span>
       <AppBar title={this.state.profile.name}/>
+      <div style={container}>
+        {boxNodes}
+      </div>
       <FloatingActionButton style={createButton} onClick={this.createBox}>
         <i className="material-icons" style={icon}>add</i>
       </FloatingActionButton>
@@ -65,8 +88,32 @@ exports.render = function() {
 };
 
 
+exports.getBoxes = function(profile) {
+  var self = this;
+
+  profile = profile || self.state.profile;
+  console.log('profile', profile);
+  if(!profile) return;
+
+  fetch('/api/users/' + profile.nickname + '/boxes', {
+    headers: {
+      'Accept': 'application/json'
+    }
+  }).then(function(res) {
+    return res.json();
+  }).then(function(boxes) {
+    self.setState({boxes: boxes});
+  })
+};
+
 exports.createBox = function() {
-  this.refs.createBox.show();
+  var self = this;
+  self.refs.createBox.show().then(function() {
+    console.log('get boxes');
+    self.getBoxes();
+  }).catch(function() {
+    console.log('error');
+  })
 }
 
 

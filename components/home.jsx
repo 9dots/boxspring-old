@@ -1,7 +1,7 @@
 var React = require('react');
 
 exports.showLock = function() {
-  this.props.lock.show();
+  this.props.lock.show({authParams: {scope: 'openid profile'}});
 };
 
 exports.render = function() {

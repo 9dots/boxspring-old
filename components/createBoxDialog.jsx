@@ -18,15 +18,23 @@ exports.getInitialState = function() {
 };
 
 exports.render = function() {
+  var self = this;
 
   var standardActions = [
     { text: 'Cancel' },
     { text: 'Submit', onClick: this._onDialogSubmit, ref: 'submit' }
   ];
 
+  function onDismiss() {
+    if (self.reject) {
+      self.reject();
+      self.resolve = null
+      self.reject = null;
+    }
+  }
 
   return (
-  <Dialog ref='createBox' title='Create new box' actions={standardActions}>
+  <Dialog ref='createBox' title='Create new box' actions={standardActions} onDismiss={onDismiss}>
     <TextField hintText="Box name" floatingLabelText="Name" style={input} 
       valueLink={this.linkState('name')}/>
     <TextField hintText="Describe box" floatingLabelText="Description" style={input}
@@ -36,22 +44,38 @@ exports.render = function() {
 };
 
 exports.show = function() {
-  this.refs.createBox.show();
+  var self = this;
+  self.refs.createBox.show();
+  var promise = new Promise(function(resolve, reject) {
+    self.resolve = resolve;
+    self.reject = reject;
+  });
+  return promise;
 };
 
 exports._onDialogSubmit = function() {
   var self = this;
   console.log('token', localStorage.getItem('userToken'))
+  console.log('body', self.state);
   fetch('/api/user/boxes', {
     method: 'POST',
-    body: self.state,
+    body: JSON.stringify(self.state),
     headers: {
-      'Authorization': 'Bearer ' + localStorage.getItem('userToken')
+      'Authorization': 'Bearer ' + localStorage.getItem('userToken'),
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
     },
   }).then(function() {
+    console.log('reslove');
+    if (self.resolve) {
+      self.resolve();
+      self.resolve = null;
+      self.reject = null;
+    }
     self.refs.createBox.dismiss();
   });
 }
+
 
 
 

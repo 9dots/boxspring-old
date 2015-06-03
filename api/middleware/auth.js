@@ -11,6 +11,7 @@ var jwtCheck = jwt({
 exports.user = compose(
   jwtCheck,
   function(req, res, next) {
+    console.log('user', req.user);
     req.user = {id: req.user.user_id, username: req.user.nickname};
     req.owner = req.user.username;
     req.username = req.owner;

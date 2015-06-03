@@ -1,7 +1,7 @@
 var boxes = require('../models').boxes;
 
 exports.create = function(req, res, next) {
-  var user = req.param('user');
+  var user = req.params['user'];
   var box = req.body; //TODO validate
 
   boxes.create(user, box).then(function() {
@@ -16,8 +16,11 @@ exports.get = function(req, res, next) {
 };
 
 exports.list = function(req, res, next) {
-  var username = req.param('username');
-  boxes.list(user).then(res.json).catch(next);
+  var username = req.params['username'];
+  boxes.list(username).then(function(list){
+    console.log('list', list);
+    res.json(list);
+  }).catch(next);
 };
 
 exports.update = function(req, res, next) {

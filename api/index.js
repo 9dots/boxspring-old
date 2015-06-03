@@ -1,5 +1,5 @@
 var express = require('express');
-
+var bodyParser = require('body-parser')
 
 var actions = require('./actions');
 var middleware = require('./middleware');
@@ -7,6 +7,7 @@ var schemas = require('./schemas');
 
 var app = module.exports = express();
 
+app.use(bodyParser.json());
 
 app.use('/users/me', middleware.auth.user);
 
