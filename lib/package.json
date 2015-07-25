@@ -1,0 +1,6 @@
+{
+  "name": "boxspring-lib",
+  "browserify": {
+    "transform": "babelify"
+  }
+}

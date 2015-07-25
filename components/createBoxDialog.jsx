@@ -55,8 +55,6 @@ exports.show = function() {
 
 exports._onDialogSubmit = function() {
   var self = this;
-  console.log('token', localStorage.getItem('userToken'))
-  console.log('body', self.state);
   fetch('/api/user/boxes', {
     method: 'POST',
     body: JSON.stringify(self.state),
@@ -66,7 +64,6 @@ exports._onDialogSubmit = function() {
       'Content-Type': 'application/json'
     },
   }).then(function() {
-    console.log('reslove');
     if (self.resolve) {
       self.resolve();
       self.resolve = null;

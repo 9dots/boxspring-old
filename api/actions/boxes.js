@@ -18,7 +18,6 @@ exports.get = function(req, res, next) {
 exports.list = function(req, res, next) {
   var username = req.params['username'];
   boxes.list(username).then(function(list){
-    console.log('list', list);
     res.json(list);
   }).catch(next);
 };

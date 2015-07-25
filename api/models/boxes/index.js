@@ -47,7 +47,7 @@ boxes.get = db.get;
 boxes.list = po(
   db.all,
   R.values,
-  R.sortBy(R.prop('updatedAt'))
+  R.sortBy(R.compose(negativeDate, R.prop('updatedAt')))
 );
 
 /**
@@ -76,3 +76,13 @@ boxes.update = po(
  */
 
 boxes.del = db.del;
+
+
+
+/**
+ * Utilities
+ */
+
+function negativeDate(date) {
+  return -new Date(date);
+}

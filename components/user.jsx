@@ -25,47 +25,42 @@ var container = {
   maxWidth: '960px'
 };
 
+var paper = {
+  padding: '15px 30px',
+  marginBottom: '20px',
+  marginTop: '20px'
+};
+
+var link = {
+  textDecoration: 'none'
+};
+
 exports.name = 'Dashboard';
+
+exports.contextTypes = {
+  router: React.PropTypes.func
+};
 
 exports.getInitialState = function() {
   return {
-    profile: null,
     boxes: []
   }
 };
 
 exports.componentDidMount = function() {
   var self = this;
-  // In this case, we receive lock and the token from the parent component
-  // If you hav them locally, just use `this.lock` and `this.idToken`
-  self.props.lock.getProfile(this.props.idToken, function (err, profile) {
-    if (err) {
-      console.log("Error loading the Profile", err);
-      return;
-    }
-    self.setState({profile: profile});
-    self.getBoxes(profile);
-  });
-
-  
-
+  var username = this.context.router.getCurrentParams().username
+  this.getBoxes(username);
 };
 
 exports.render = function() {
-  if (!this.state.profile) {
-    return (
-      <span>
-        <AppBar/>
-        <LinearProgress mode="indeterminate"  />
-      </span>
-    );
-  }
-
   var boxNodes = this.state.boxes.map(function(box) {
     return (
       <Paper key={box.id}>
-        <h3>{box.name}</h3>
-        <p>{box.description}</p>
+        <div style={paper}>
+          <a href={box.fullName} style={link}><h3>{box.name}</h3></a>
+          <p>{box.description}</p>
+        </div>
       </Paper>
     )
   });
@@ -73,7 +68,6 @@ exports.render = function() {
 
   return (
     <span>
-      <AppBar title={this.state.profile.name}/>
       <div style={container}>
         {boxNodes}
       </div>
@@ -88,14 +82,10 @@ exports.render = function() {
 };
 
 
-exports.getBoxes = function(profile) {
+exports.getBoxes = function(username) {
   var self = this;
 
-  profile = profile || self.state.profile;
-  console.log('profile', profile);
-  if(!profile) return;
-
-  fetch('/api/users/' + profile.nickname + '/boxes', {
+  fetch('/api/users/' + username + '/boxes', {
     headers: {
       'Accept': 'application/json'
     }
@@ -109,11 +99,8 @@ exports.getBoxes = function(profile) {
 exports.createBox = function() {
   var self = this;
   self.refs.createBox.show().then(function() {
-    console.log('get boxes');
     self.getBoxes();
-  }).catch(function() {
-    console.log('error');
-  })
+  });
 }
 
 

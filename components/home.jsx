@@ -1,7 +1,13 @@
 var React = require('react');
 
+exports.displayName = 'Home'
+
+exports.contextTypes = {
+  lock: React.PropTypes.object
+}
+
 exports.showLock = function() {
-  this.props.lock.show({authParams: {scope: 'openid profile'}});
+  this.context.lock.show({authParams: {scope: 'openid profile'}});
 };
 
 exports.render = function() {

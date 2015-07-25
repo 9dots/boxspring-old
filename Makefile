@@ -3,7 +3,7 @@
 #
 
 NODE_BIN = ./node_modules/.bin
-BUILD_ARGS = client.js -g reactify -o build/build.js -v
+BUILD_ARGS = client.js -t babelify -o build/build.js -v
 
 #
 # Tasks
@@ -25,7 +25,7 @@ lr: dir
 	@${NODE_BIN}/tiny-lr-it build
 
 watch: link dir
-	@${NODE_BIN}/watchify ${BUILD_ARGS}
+	@${NODE_BIN}/watchify ${BUILD_ARGS} -d
 
 build: link dir
 	@${NODE_BIN}/browserify ${BUILD_ARGS}

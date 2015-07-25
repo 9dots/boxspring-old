@@ -4,6 +4,7 @@
 
 var React = require('react');
 var mui = require('material-ui');
+var Router = require('react-router');
 
 require("react-tap-event-plugin")();
 
@@ -15,11 +16,10 @@ require('whatwg-fetch');
 require('es6-promise').polyfill();
 
 /**
- * Components
+ * Libs
  */
 
-var Home = require('./home.jsx');
-var Dashboard = require('./dashboard.jsx');
+var lock = require('lib/auth-lock');
 
 /**
  * App Setup
@@ -30,57 +30,65 @@ ThemeManager.setTheme(ThemeManager.types.LIGHT);
 
 
 /**
+ * Components
+ */
+
+var Title = require('./title.jsx');
+
+var AppBar = mui.AppBar;
+var LinearProgress = mui.LinearProgress;
+var RouteHandler = Router.RouteHandler;
+var lock = lock();
+
+/**
  * App
  */
 
 exports.name = 'App';
 
+exports.mixins = [Router.Navigation];
+
 exports.childContextTypes = {
-  muiTheme: React.PropTypes.object
+  muiTheme: React.PropTypes.object,
+  profile: React.PropTypes.object,
+  lock: React.PropTypes.object
 };
 
 exports.getChildContext = function() {
   return {
-    muiTheme: ThemeManager.getCurrentTheme()
+    muiTheme: ThemeManager.getCurrentTheme(),
+    profile: this.state.profile,
+    lock: lock
+  };
+};
+
+exports.getInitialState = function() {
+  return {
+    profile: null
   };
 };
 
 exports.componentWillMount = function() {
-  this.lock = new Auth0Lock('sYkFyv2qKjEMe2W2OugZ5JiHUju296kL', 'boxspring.auth0.com');
-  this.setState({idToken: this.getIdToken()});
+  var self = this;
+  lock.profile && lock.profile.then(function(profile) {
+    self.setState({profile: profile});
+    console.log('profile', profile);
+    self.transitionTo('user', {username: profile.nickname})
+  });
 };
 
 exports.render = function() {
-  var idToken = this.state.idToken;
-  if (!idToken) {
-    return (
-    <Home lock={this.lock} />
-    )
-  } else {
-    return (
-    <Dashboard lock={this.lock} idToken={idToken}/>
-    )
-  }
-  
+  var async;
+  if (this.state.asyncAction)
+    async = <LinearProgress mode="indeterminate"  />
+
+  return (
+    <span>
+      <AppBar title={<Title/>}/>
+      {async}
+      <RouteHandler/>
+    </span>
+  );
 };
-
-
-exports.getIdToken = function() {
-  var idToken = localStorage.getItem('userToken');
-  var authHash = this.lock.parseHash(window.location.hash);
-  if (!idToken && authHash) {
-    if (authHash.id_token) {
-      idToken = authHash.id_token
-      localStorage.setItem('userToken', authHash.id_token);
-    }
-    if (authHash.error) {
-      console.log("Error signing in", authHash);
-      return null;
-    }
-  }
-  return idToken;
-}
-
-
 
 module.exports = React.createClass(exports);
